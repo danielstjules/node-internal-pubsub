@@ -4,12 +4,20 @@ var PatternEmitter = require('pattern-emitter');
 var Subscriber     = require('../lib/subscriber');
 
 describe('Subscriber', function() {
-  var emitter;
-  var sub;
+  var emitter, sub, channels, messages, counts;
+
+  var messageListener = function(channel, message) {
+    channels.push(channel);
+    messages.push(message);
+  };
 
   beforeEach(function() {
     emitter = new PatternEmitter();
     sub = new Subscriber(emitter);
+
+    channels = [];
+    messages = [];
+    counts = [];
   });
 
   it("inherits EventEmitter's prototype", function() {
@@ -36,23 +44,10 @@ describe('Subscriber', function() {
   });
 
   describe('subscribe', function() {
-    var channels, messages, counts;
-
-    var messageListener = function(channel, message) {
-      channels.push(channel);
-      messages.push(message);
-    };
-
     var subscribeListener = function(channel, count) {
       channels.push(channel);
       counts.push(count);
     };
-
-    beforeEach(function() {
-      channels = [];
-      messages = [];
-      counts = [];
-    });
 
     it('subscribes to a given channel', function() {
       sub.subscribe('testChannel');
@@ -131,6 +126,84 @@ describe('Subscriber', function() {
       expect(channels.length).to.be(1);
       expect(channels[0]).to.be('newListener');
       expect(messages[0]).to.be('testMessage');
+    });
+  });
+
+  describe('unsubscribe', function() {
+    var unsubscribeListener = function(channel, count) {
+      channels.push(channel);
+      counts.push(count);
+    };
+
+    beforeEach(function() {
+      sub.subscribe('testChannel1', 'testChannel2', 'testChannel3');
+    });
+
+    it('unsubscribes from a given channel', function() {
+      sub.on('message', messageListener);
+      sub.unsubscribe('testChannel1');
+
+      emitter.emit('testChannel1', 'testMessage1');
+      emitter.emit('testChannel2', 'testMessage2');
+
+      expect(channels[0]).to.be('testChannel2');
+      expect(messages[0]).to.be('testMessage2');
+    });
+
+    it('can unsubscribe from multiple channels', function() {
+      sub.unsubscribe('testChannel1');
+      sub.unsubscribe('testChannel2');
+      sub.on('message', messageListener);
+
+      [1, 2, 3].forEach(function(i) {
+        emitter.emit('testChannel' + i, 'testMessage' + i);
+      });
+
+      expect(channels.length).to.be(1);
+      expect(channels[0]).to.be('testChannel3');
+      expect(messages[0]).to.be('testMessage3');
+    });
+
+    it('accepts multiple channels to unsubscribe from', function() {
+      sub.unsubscribe('testChannel1', 'testChannel2');
+      sub.on('message', messageListener);
+
+      [1, 2, 3].forEach(function(i) {
+        emitter.emit('testChannel' + i, 'testMessage' + i);
+      });
+
+      expect(channels.length).to.be(1);
+      expect(channels[0]).to.be('testChannel3');
+      expect(messages[0]).to.be('testMessage3');
+    });
+
+    it('decrements the subscription count', function() {
+      var previousCount = sub.count;
+      sub.unsubscribe('testChannel1', 'testChannel2');
+
+      expect(sub.count).to.be(previousCount - 2);
+    });
+
+    it('emits an unsubscribe event for each, with the channel and count', function() {
+      sub.on('unsubscribe', unsubscribeListener);
+      sub.unsubscribe('testChannel1', 'testChannel2');
+
+      expect(channels.length).to.be(2);
+      expect(channels[0]).to.be('testChannel1');
+      expect(counts[0]).to.be(2);
+      expect(channels[1]).to.be('testChannel2');
+      expect(counts[1]).to.be(1);
+    });
+
+    it('ignores channels not among its subscriptions', function() {
+      sub.on('unsubscribe', unsubscribeListener);
+      sub.unsubscribe('testChannel1', 'testChannel1', 'testChannel2');
+
+      expect(channels.length).to.be(2);
+      expect(channels[0]).to.be('testChannel1');
+      expect(counts[0]).to.be(2);
+      expect(channels[1]).to.be('testChannel2');
+      expect(counts[1]).to.be(1);
     });
   });
 });
