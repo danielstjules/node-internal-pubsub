@@ -1,8 +1,7 @@
-var expect = require('expect.js');
-var pubsub = require('../lib/pubsub');
-
+var expect     = require('expect.js');
+var pubsub     = require('../lib/pubsub');
 var Subscriber = require('../lib/subscriber');
-var Publisher = require('../lib/publisher');
+var Publisher  = require('../lib/publisher');
 
 describe('pubsub', function() {
   describe('createPublisher', function() {
