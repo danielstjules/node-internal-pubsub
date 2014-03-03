@@ -4,16 +4,16 @@ var Publisher      = require('../lib/publisher');
 
 describe('Publisher', function() {
   var emitter;
-  var publisher;
+  var pub;
 
   beforeEach(function() {
     emitter = new PatternEmitter();
-    publisher = new Publisher(emitter);
+    pub = new Publisher(emitter);
   });
 
   describe('constructor', function() {
     it('stores the emitter in a property', function() {
-      expect(publisher.emitter).to.be(emitter);
+      expect(pub.emitter).to.be(emitter);
     });
   });
 
@@ -27,7 +27,7 @@ describe('Publisher', function() {
         argumentCount = arguments.length;
       });
 
-      publisher.publish('testChannel', 'testMessage');
+      pub.publish('testChannel', 'testMessage');
 
       expect(message).to.be('testMessage');
       expect(argumentCount).to.be(1);
