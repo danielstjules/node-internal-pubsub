@@ -15,7 +15,7 @@ describe('pubsub', function() {
       var pub1 = pubsub.createPublisher();
       var pub2 = pubsub.createPublisher();
 
-      expect(pub1.emitter).to.be(pub2.emitter);
+      expect(pub1._emitter).to.be(pub2._emitter);
     });
   });
 
@@ -30,7 +30,7 @@ describe('pubsub', function() {
       var sub1 = pubsub.createSubscriber();
       var sub2 = pubsub.createSubscriber();
 
-      expect(sub1.emitter).to.be(sub2.emitter);
+      expect(sub1._emitter).to.be(sub2._emitter);
     });
   });
 
@@ -38,6 +38,6 @@ describe('pubsub', function() {
       var pub = pubsub.createPublisher();
       var sub = pubsub.createSubscriber();
 
-      expect(pub.emitter).to.equal(sub.emitter);
+      expect(pub._emitter).to.equal(sub._emitter);
   });
 });

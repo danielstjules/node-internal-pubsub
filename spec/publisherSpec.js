@@ -13,7 +13,7 @@ describe('Publisher', function() {
 
   describe('constructor', function() {
     it('stores the emitter in a property', function() {
-      expect(pub.emitter).to.be(emitter);
+      expect(pub._emitter).to.be(emitter);
     });
   });
 

@@ -38,15 +38,23 @@ describe('Subscriber', function() {
 
   describe('constructor', function() {
     it('stores the emitter in a property', function() {
-      expect(sub.emitter).to.be(emitter);
+      expect(sub._emitter).to.be(emitter);
     });
 
-    it('initializes its subscription count to 0', function() {
-      expect(sub.count).to.be(0);
+    it('initializes its subscription _count to 0', function() {
+      expect(sub._count).to.be(0);
     });
 
-    it('assigns a new object to the subscriptions property', function() {
-      expect(sub.subscriptions).to.eql({});
+    it('assigns a new object to the _subscriptions property', function() {
+      expect(sub._subscriptions).to.eql({});
+    });
+
+    it('assigns a new object to the _psubscriptions property', function() {
+      expect(sub._psubscriptions).to.eql({});
+    });
+
+    it('assigns a new object to the _regexes property', function() {
+      expect(sub._regexes).to.eql({});
     });
   });
 
@@ -95,10 +103,10 @@ describe('Subscriber', function() {
     });
 
     it('increments the subscription count', function() {
-      var previousCount = sub.count;
+      var previousCount = sub._count;
       sub.subscribe('testChannel1', 'testChannel2');
 
-      expect(sub.count).to.be(previousCount + 2);
+      expect(sub._count).to.be(previousCount + 2);
     });
 
     it('emits a subscribe event for each, with the channel and count', function() {
@@ -175,10 +183,10 @@ describe('Subscriber', function() {
     });
 
     it('decrements the subscription count', function() {
-      var previousCount = sub.count;
+      var previousCount = sub._count;
       sub.unsubscribe('testChannel1', 'testChannel2');
 
-      expect(sub.count).to.be(previousCount - 2);
+      expect(sub._count).to.be(previousCount - 2);
     });
 
     it('emits an unsubscribe event for each, with the channel and count', function() {
@@ -249,10 +257,10 @@ describe('Subscriber', function() {
     });
 
     it('increments the subscription count', function() {
-      var previousCount = sub.count;
+      var previousCount = sub._count;
       sub.psubscribe(/test/, /^other/);
 
-      expect(sub.count).to.be(previousCount + 2);
+      expect(sub._count).to.be(previousCount + 2);
     });
 
     it('emits a subscribe event for each, with the pattern and count', function() {
@@ -330,10 +338,10 @@ describe('Subscriber', function() {
     });
 
     it('decrements the subscription count', function() {
-      var previousCount = sub.count;
+      var previousCount = sub._count;
       sub.punsubscribe(/test/, /TestChannel/i);
 
-      expect(sub.count).to.be(previousCount - 2);
+      expect(sub._count).to.be(previousCount - 2);
     });
 
     it('emits a punsubscribe event for each, with the pattern and count', function() {
