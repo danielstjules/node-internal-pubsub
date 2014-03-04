@@ -196,6 +196,14 @@ describe('Subscriber', function() {
       expect(channels).to.eql(['testChannel1', 'testChannel2']);
       expect(counts).to.eql([2, 1]);
     });
+
+    it('unsubscribes from all channels if none are specified', function() {
+      sub.on('unsubscribe', unsubscribeListener);
+      sub.unsubscribe();
+
+      expect(channels).to.have.length(3);
+      expect(counts).to.eql([2, 1, 0]);
+    });
   });
 
   describe('psubscribe', function() {
@@ -342,6 +350,14 @@ describe('Subscriber', function() {
 
       expect(patterns).to.eql([/test/, /TestChannel/i]);
       expect(counts).to.eql([2, 1]);
+    });
+
+    it('unsubscribes from all patterns if none are specified', function() {
+      sub.on('punsubscribe', punsubscribeListener);
+      sub.punsubscribe();
+
+      expect(patterns).to.have.length(3);
+      expect(counts).to.eql([2, 1, 0]);
     });
   });
 });
