@@ -1,7 +1,7 @@
 node-internal-pubsub
 ====================
 
-A publish/subscribe API similar to that in node_redis, minus the redis. WIP.
+A publish/subscribe API similar to that in node_redis, minus the redis.
 
 [![Build Status](https://travis-ci.org/danielstjules/node-internal-pubsub.png)](https://travis-ci.org/danielstjules/node-internal-pubsub)
 
@@ -16,3 +16,100 @@ your `package.json` file:
     "node-internal-pubsub": ">0.0.0"
 }
 ```
+
+## Publisher
+
+A publisher in the internal pub sub module. Publishes messages by invoking
+emit on an instance of PatternEmitter.
+
+#### createPublisher()
+
+Creates and returns a new Publisher instance.
+
+``` javascript
+var pubsub     = require('node-internal-pubsub');
+var publisher  = pubsub.createPublisher();
+```
+
+#### publisher.publish(channel, message)
+
+Publishes a message to the given channel. Channel is expected to be a string,
+though message can be any object.
+
+``` javascript
+var pubsub     = require('node-internal-pubsub');
+var publisher  = pubsub.createPublisher();
+
+publisher.publish('channel:1', 'A message to send to all channel subscribers');
+```
+
+## Subscriber
+
+A subscriber in the internal pub sub module. Each subscriber holds a count
+of the number of subscriptions it holds. It extends EventEmitter, but rather
+than emitting newListener and removeListener events, it emits events
+corresponding to those used in node_redis: message, pmessage, subscribe,
+psubscribe, unsubscribe, and punsubscribe.
+
+#### createSubscriber()
+
+Creates and returns a new Subscriber instance.
+
+``` javascript
+var pubsub     = require('node-internal-pubsub');
+var subscriber = pubsub.createSubscriber();
+```
+
+#### subscriber.subscribe([channel1], [channel2], [...])
+
+Subscribes to all messages published in the given channels. Accepts multiple
+channels as arguments, and emits a subscribe event for each newly subscribed
+channel. The event is passed the channel name, and the current subscription
+count. Ignores channels that are already subscribed to.
+
+``` javascript
+subscriber.subscribe('channel:1', 'channel:2');
+subscriber.on('message', function(channel, message) {
+  console.log('Received:', channel, '-', message);
+});
+
+publisher.publish('channel:1', 'Example message');
+// 'Received: channel:1 - message'
+```
+
+#### subscriber.unsubscribe([...channels])
+
+Unsubscribes from messages in each of the provided channels. Accepts
+multiple channels as arguments, and emits an unsubscribe event for each
+channel. The event is passed the channel name, and the current subscription
+count. Ignores channels that are not among the current subscriptions. If no
+arguments are passed, the subscriber is unsubscribed from all channels.
+
+#### subscriber.psubscribe([pattern1], [pattern2], [...])
+
+Subscribes to all messages published in channels matching the given
+regular expressions' patterns. Accepts multiple RegExp objects as arguments,
+and emits a psubscribe event for each newly subscribed pattern. The event
+is passed the RegExp, and the current subscription count. Any non RegExp
+instances passed to this function are cast to a string, and used to create a
+RegExp. Ignores patterns that are already subscribed to.
+
+``` javascript
+subscriber.psubscribe(/channel/);
+subscriber.on('pmessage', function(pattern, channel, message) {
+  console.log('Received:', pattern, '-', channel, '-', message);
+});
+
+publisher.publish('channel:1', 'Example message');
+// 'Received: /channel/ - channel:1 - Example message'
+```
+
+#### subscriber.punsubscribe([...patterns])
+
+Unsubscribes from each of the provided regular expressions' patterns.
+Accepts multiple RegExp objects as arguments, and emits a punsubscribe event
+for each pattern. The event is passed the RegExp, and the current
+subscription count. Any non RegExp instances passed to this function are
+cast to a string, and used to create a RegExp. Ignores patterns that are
+not among the current subscriptions. If no arguments are passed, the
+subscriber is unsubscribed from all patterns.
