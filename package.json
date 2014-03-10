@@ -13,7 +13,7 @@
         "url": "https://github.com/danielstjules/node-internal-pubsub.git"
     },
     "dependencies": {
-        "pattern-emitter": ">=0.0.4"
+        "pattern-emitter": "1.x.x"
     },
     "devDependencies": {
         "mocha": "*",
