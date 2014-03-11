@@ -40,7 +40,7 @@ Running time: 1203 ms
 Avg messages received per second: 8,312,551
 ```
 
-A ~2500% performance improvement can be seen by using the 2,000 internal
+A ~25x performance improvement can be seen by using the 2,000 internal
 subscribers as opposed to the same number of redis clients.
 
 ## Publisher
