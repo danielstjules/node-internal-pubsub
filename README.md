@@ -17,6 +17,32 @@ your `package.json` file:
 }
 ```
 
+## Performance
+
+A benchmark can be found at `benchmarks/singleChannelMultiSubs.js`. It tests
+the performance of sending 10,000,000 messages in a single channel using
+2,000 redis clients/subscribers, compared to a single redis client
+and 2,000 `node-internal-pubsub` subscribers. Example results can be seen below:
+
+```
+$ node benchmarks/singleChannelMultiSubs.js
+Setting up redis suite
+Receiving 10000000 messages with 2000 redis subscribers
+Setting up pubsub suite
+Receiving 10000000 messages with 1 redis sub, 2000 pubsub subscribers
+
+Redis subscribers
+Running time: 29735 ms
+Avg messages received per second: 336,304
+
+Redis subscriber with pubsub subscribers
+Running time: 1203 ms
+Avg messages received per second: 8,312,551
+```
+
+A ~2500% performance improvement can be seen by using the 2,000 internal
+subscribers as opposed to the same number of redis clients.
+
 ## Publisher
 
 A publisher in the internal pub sub module. Publishes messages by invoking
