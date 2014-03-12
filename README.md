@@ -25,6 +25,7 @@ Built on [pattern-emitter](https://github.com/danielstjules/pattern-emitter).
     * [psubscribe](#psubscribe)
     * [unsubscribe](#unsubscribe)
     * [punsubscribe](#punsubscribe)
+* [Example Servers](#example-servers)
 
 ## Installation
 
@@ -67,7 +68,7 @@ possible duplication of data and unnecessary network IO.
 As such, this library exists to simplify the transition to using a single
 redis client for all connections, in addition to an internal pubsub mechanism.
 Most of the API has been designed to resemble that in `node_redis`, though a
-few key difference exists:
+few key differences exists:
 
   * Subscribers and publishers must be created using `pubsub.createSubscriber`
     and `pubsub.createPublisher`, respectively
@@ -296,3 +297,7 @@ subscriber.on('punsubscribe', function(pattern, count) {
 });
 subscriber.punsubscribe(/\w+/); // '/\w+/ 0'
 ```
+
+## Example Servers
+
+Coming soon
