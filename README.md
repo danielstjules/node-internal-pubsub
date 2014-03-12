@@ -2,6 +2,7 @@ node-internal-pubsub
 ====================
 
 A publish/subscribe API similar to that in `node_redis`, minus the redis.
+Built on [pattern-emitter](https://github.com/danielstjules/pattern-emitter).
 
 [![Build Status](https://travis-ci.org/danielstjules/node-internal-pubsub.png)](https://travis-ci.org/danielstjules/node-internal-pubsub)
 
@@ -23,7 +24,7 @@ A publish/subscribe API similar to that in `node_redis`, minus the redis.
     * [subscribe](#subscribe)
     * [psubscribe](#psubscribe)
     * [unsubscribe](#unsubscribe)
-    * [punsubscribe](#unsubpunsubscribescribe)
+    * [punsubscribe](#punsubscribe)
 
 ## Installation
 
