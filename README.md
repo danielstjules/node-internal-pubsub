@@ -17,6 +17,13 @@ A publish/subscribe API similar to that in `node_redis`, minus the redis.
     * [subscriber.unsubscribe(\[...channels\])](#subscriberunsubscribechannels)
     * [subscriber.psubscribe(\[pattern1\], \[pattern2\], [...])](#subscriberpsubscribepattern1-pattern2-)
     * [subscriber.punsubscribe(\[...patterns\])](#subscriberpunsubscribepatterns)
+* [Events](#events)
+    * [message](#message)
+    * [pmessage](#pmmessage)
+    * [subscribe](#subscribe)
+    * [psubscribe](#psubscribe)
+    * [unsubscribe](#unsubscribe)
+    * [punsubscribe](#unsubpunsubscribescribe)
 
 ## Installation
 
@@ -58,9 +65,14 @@ possible duplication of data and unnecessary network IO.
 
 As such, this library exists to simplify the transition to using a single
 redis client for all connections, in addition to an internal pubsub mechanism.
-Most of the API has been designed to resemble that in `node_redis`, though a key
-difference exists: rather than offering glob-based pattern subscriptions,
-regular expressions are available.
+Most of the API has been designed to resemble that in `node_redis`, though a
+few key difference exists:
+
+  * Subscribers and publishers must be created using `pubsub.createSubscriber`
+    and `pubsub.createPublisher`, respectively
+  * Rather than offering glob-based pattern subscriptions, regular expressions
+    are available
+  * Subscribers do not exit subscriber mode when the subscription count reaches 0
 
 ## Performance
 
@@ -85,8 +97,8 @@ Running time: 1203 ms
 Avg messages received per second: 8,312,551
 ```
 
-A ~25x performance improvement can be seen by using the 2,000 internal
-subscribers as opposed to the same number of redis clients.
+A ~24x improvement in performance can be seen in the above example by using the
+2,000 internal subscribers as opposed to the same number of redis clients.
 
 ## Publisher
 
@@ -156,6 +168,11 @@ channel. The event is passed the channel name, and the current subscription
 count. Ignores channels that are not among the current subscriptions. If no
 arguments are passed, the subscriber is unsubscribed from all channels.
 
+``` javascript
+subscriber.subscribe('channel:1', 'channel:2');
+subscriber.unsubscribe('channel:1', 'channel:2');
+```
+
 #### subscriber.psubscribe([pattern1], [pattern2], [...])
 
 Subscribes to all messages published in channels matching the given
@@ -177,6 +194,11 @@ publisher.publish('channel:1', 'Example message');
 
 #### subscriber.punsubscribe([...patterns])
 
+``` javascript
+subscriber.psubscribe(/channel/);
+subscriber.punsubscribe(/channel/);
+```
+
 Unsubscribes from each of the provided regular expressions' patterns.
 Accepts multiple RegExp objects as arguments, and emits a punsubscribe event
 for each pattern. The event is passed the RegExp, and the current
@@ -184,3 +206,95 @@ subscription count. Any non RegExp instances passed to this function are
 cast to a string, and used to create a RegExp. Ignores patterns that are
 not among the current subscriptions. If no arguments are passed, the
 subscriber is unsubscribed from all patterns.
+
+## Events
+
+Each subscriber instance extends EventEmitter and, like node_redis subscriber
+clients, emit the following events: message, pmessage, subscribe, psubscribe,
+unsubscribe, and punsubscribe.
+
+#### message
+
+`{string} channel, {*} message`
+
+Emitted when a message is received on a subscribed channel.
+
+``` javascript
+subscriber.subscribe('example');
+subscriber.on('message', function(channel, message) {
+  console.log(channel, message);
+});
+publisher.publish('example', 'message'); // 'example message'
+```
+
+#### pmessage
+
+`{RegExp} pattern, {string} channel, {*} message`
+
+Emitted when a message is received on a channel matching a pattern subscription.
+
+``` javascript
+subscriber.subscribe(/^example/i);
+subscriber.on('message', function(pattern, channel, message) {
+  console.log(pattern, channel, message);
+});
+publisher.publish('ExampleSub', 'message'); // '/^example/i ExampleSub message'
+```
+
+#### subscribe
+
+`{string} channel, {int} count`
+
+Emitted when a new channel is subscribed to. Both the channel name and the
+updated subscription count are passed to the listener.
+
+``` javascript
+subscriber.on('subscribe', function(channel, count) {
+  console.log(channel, count);
+});
+subscriber.subscribe('example'); // 'example 1'
+```
+
+#### psubscribe
+
+`{RegExp} pattern, {int} count`
+
+Emitted when a new pattern is subscribed to. The pattern and the updated
+subscription count are passed to the listener.
+
+``` javascript
+subscriber.on('psubscribe', function(pattern, count) {
+  console.log(pattern, count);
+});
+subscriber.psubscribe(/^\w+$/); // '/^\w+$/ 1'
+```
+
+#### unsubscribe
+
+`{string} channel, {int} count`
+
+Emitted in response to unsubscribing from a channel. Both the channel name and
+the updated subscription count are passed to the listener.
+
+``` javascript
+subscriber.subscribe('example');
+subscriber.on('unsubscribe', function(channel, count) {
+  console.log(channel, count);
+});
+subscriber.unsubscribe('example'); // 'example 0'
+```
+
+#### punsubscribe
+
+`{RegExp} pattern, {int} count`
+
+Emitted in response to unsubscribing from a pattern The pattern and the updated
+subscription count are passed to the listener.
+
+``` javascript
+subscriber.psubscribe(/\w+/);
+subscriber.on('punsubscribe', function(pattern, count) {
+  console.log(pattern, count);
+});
+subscriber.punsubscribe(/\w+/); // '/\w+/ 0'
+```
