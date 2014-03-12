@@ -5,6 +5,19 @@ A publish/subscribe API similar to that in `node_redis`, minus the redis.
 
 [![Build Status](https://travis-ci.org/danielstjules/node-internal-pubsub.png)](https://travis-ci.org/danielstjules/node-internal-pubsub)
 
+* [Installation](#installation)
+* [Overview](#overview)
+* [Performance](#performance)
+* [Publisher](#publisher)
+    * [createPublisher()](#createpublisher)
+    * [publisher.publish(channel, message)](#publisherpublishchannel-message)
+* [Subscriber](#subscriber)
+    * [createSubscriber()](#createsubscriber)
+    * [subscriber.subscribe(\[channel1\], \[channel2\], [...])](#subscribersubscribechannel1-channel2-)
+    * [subscriber.unsubscribe(\[...channels\])](#subscriberunsubscribechannels)
+    * [subscriber.psubscribe(\[pattern1\], \[pattern2\], [...])](#subscriberpsubscribepattern1-pattern2-)
+    * [subscriber.punsubscribe(\[...patterns\])](#subscriberpunsubscribepatterns)
+
 ## Installation
 
 Using npm, you can install node-internal-pubsub with
@@ -40,7 +53,7 @@ io.sockets.on('connection', function(socket) {
 
 While the `node_redis` pubsub API simplifies the management of subscriptions as
 opposed to listeners (e.g. using EventEmitter), it likely shouldn't be used for
-internal message routing as seen in the above example. This is mostly due the
+internal message routing as seen in the above example. This is mostly due to the
 possible duplication of data and unnecessary network IO.
 
 As such, this library exists to simplify the transition to using a single
