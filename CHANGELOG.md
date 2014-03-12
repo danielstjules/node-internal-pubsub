@@ -1,3 +1,9 @@
+### 0.0.3 (2014-03-11)
+
+  * Set max listeners to unlimited for internal pattern-emitter
+  * Added benchmark
+  * Improved documentation
+
 ### 0.0.2 (2014-03-05)
 
   * Working subscriber
