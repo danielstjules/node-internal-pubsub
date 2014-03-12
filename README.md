@@ -120,9 +120,6 @@ Publishes a message to the given channel. Channel is expected to be a string,
 though message can be any object.
 
 ``` javascript
-var pubsub     = require('node-internal-pubsub');
-var publisher  = pubsub.createPublisher();
-
 publisher.publish('channel:1', 'A message to send to all channel subscribers');
 ```
 
