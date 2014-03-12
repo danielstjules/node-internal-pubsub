@@ -1,7 +1,7 @@
 node-internal-pubsub
 ====================
 
-A publish/subscribe API similar to that in node_redis, minus the redis.
+A publish/subscribe API similar to that in `node_redis`, minus the redis.
 
 [![Build Status](https://travis-ci.org/danielstjules/node-internal-pubsub.png)](https://travis-ci.org/danielstjules/node-internal-pubsub)
 
@@ -16,6 +16,38 @@ your `package.json` file:
     "node-internal-pubsub": ">0.0.0"
 }
 ```
+
+## Overview
+
+Quite a few SockJS and Socket.IO examples/tutorials create a redis client in
+subscriber mode per socket connection. They demonstrate code along the lines of:
+
+``` javascript
+sockjs.on('connection', function(conn) {
+  var sub = redis.createClient();
+  ...
+}
+```
+
+or
+
+``` javascript
+io.sockets.on('connection', function(socket) {
+  var sub = redis.createClient();
+  ...
+}
+```
+
+While the `node_redis` pubsub API simplifies the management of subscriptions as
+opposed to listeners (e.g. using EventEmitter), it likely shouldn't be used for
+internal message routing as seen in the above example. This is mostly due the
+possible duplication of data and unnecessary network IO.
+
+As such, this library exists to simplify the transition to using a single
+redis client for all connections, in addition to an internal pubsub mechanism.
+Most of the API has been designed to resemble that in `node_redis`, though a key
+difference exists: rather than offering glob-based pattern subscriptions,
+regular expressions are available.
 
 ## Performance
 
