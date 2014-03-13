@@ -9,6 +9,7 @@ Built on [pattern-emitter](https://github.com/danielstjules/pattern-emitter).
 * [Installation](#installation)
 * [Overview](#overview)
 * [Performance](#performance)
+* [Examples](#examples)
 * [Publisher](#publisher)
     * [createPublisher()](#createpublisher)
     * [publisher.publish(channel, message)](#publisherpublishchannel-message)
@@ -25,7 +26,6 @@ Built on [pattern-emitter](https://github.com/danielstjules/pattern-emitter).
     * [psubscribe](#psubscribe)
     * [unsubscribe](#unsubscribe)
     * [punsubscribe](#punsubscribe)
-* [Example Servers](#example-servers)
 
 ## Installation
 
@@ -99,8 +99,28 @@ Running time: 1203 ms
 Avg messages received per second: 8,312,551
 ```
 
-A ~24x improvement in performance can be seen in the above example by using the
+A ~24x improvement in performance can be seen in the above output by using the
 2,000 internal subscribers as opposed to the same number of redis clients.
+
+## Examples
+
+The following is a brief example showcasing the libraries use with an existing
+websocket server:
+
+``` javascript
+var redisSub = redis.createClient();
+var pub = pubsub.createPublisher();
+
+// Subscribe to all incoming messages, and publish them to the internal pubsub
+redisSub.psubscribe('*');
+redisSub.on('pmessage', function(pattern, channel, msg) {
+  pub.publish(channel, msg);
+});
+
+wsServer.on('connection', function(conn) {
+  var sub = pubsub.createSubscriber();
+}
+```
 
 ## Publisher
 
@@ -297,7 +317,3 @@ subscriber.on('punsubscribe', function(pattern, count) {
 });
 subscriber.punsubscribe(/\w+/); // '/\w+/ 0'
 ```
-
-## Example Servers
-
-Coming soon
