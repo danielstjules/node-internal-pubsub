@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>SockJS Example</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="http://cdn.sockjs.org/sockjs-0.3.min.js"></script>
+    <style>
+      .box {
+        color: #333;
+        width: 300px;
+        float: left;
+        margin: 0 20px 0 20px;
+      }
+      .box div, .box input {
+        border: 1px solid;
+        border-color: #999;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+        width: 100%;
+        padding: 5px;
+        margin: 5px;
+      }
+      .box div {
+        height: 300px;
+        overflow-y: auto;
+      }
+      .box code {
+        display: block;
+        word-wrap: break-word;
+        padding-bottom: 15px;
+      }
+      .box input {
+        height: 30px;
+      }
+      h1 {
+        margin-left: 30px;
+      }
+      body {
+        font-family: Helvetica, arial, freesans, clean, sans-serif;
+      }
+    </style>
+  </head>
+  <body lang="en">
+    <h1>SockJS Example</h1>
+
+    <div id="first" class="box">
+      <div></div>
+      <form>
+        <input autocomplete="off" placeholder="Type here...">
+      </form>
+    </div>
+
+    <script>
+      var url = '/chat';
+      var sockjs = new SockJS(url);
+      $('#first input').focus();
+
+      var div  = $('#first div');
+      var inp  = $('#first input');
+      var form = $('#first form');
+
+      var print = function(m, p) {
+        p = (p === undefined) ? '' : JSON.stringify(p);
+        div.append($("<code>").text(m + ' ' + p));
+        div.scrollTop(div.scrollTop() + 10000);
+      };
+
+      sockjs.onopen = function() {
+        print('[*] open', sockjs.protocol);
+      };
+
+      sockjs.onmessage = function(e){
+        print('[.] message', e.data);
+      };
+
+      sockjs.onclose = function() {
+        print('[*] close');
+      };
+
+      form.submit(function() {
+        print('[ ] sending', inp.val());
+        sockjs.send(inp.val());
+        inp.val('');
+
+        return false;
+      });
+    </script>
+  </body>
+</html>

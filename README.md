@@ -104,8 +104,8 @@ A ~24x improvement in performance can be seen in the above output by using the
 
 ## Examples
 
-The following is a brief example showcasing the libraries use with an existing
-websocket server:
+The following is a brief example showing how to setup the library with an
+existing websocket server:
 
 ``` javascript
 var redisSub = redis.createClient();
@@ -121,6 +121,8 @@ wsServer.on('connection', function(conn) {
   var sub = pubsub.createSubscriber();
 }
 ```
+
+Complete examples can found in the `examples` directory.
 
 ## Publisher
 

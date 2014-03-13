@@ -1,0 +1,10 @@
+{
+    "name": "sockjs-express-redis",
+    "version": "0.0.1",
+    "dependencies": {
+        "express": "3.5.*",
+        "sockjs": "*",
+        "redis": "*",
+        "node-internal-pubsub": "*"
+    }
+}
