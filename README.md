@@ -54,7 +54,7 @@ sockjs.on('connection', function(conn) {
 or
 
 ``` javascript
-io.sockets.on('connection', function(socket) {
+io.on('connection', function(socket) {
   var sub = redis.createClient();
   ...
 }
@@ -108,6 +108,7 @@ The following is a brief example showing how to setup the library with an
 existing websocket server:
 
 ``` javascript
+var redisClient = redis.createClient();
 var redisSub = redis.createClient();
 var pub = pubsub.createPublisher();
 
@@ -119,10 +120,14 @@ redisSub.on('pmessage', function(pattern, channel, msg) {
 
 wsServer.on('connection', function(conn) {
   var sub = pubsub.createSubscriber();
+
+  conn.on('data', function(message) {
+    redisClient.publish('chatmessages', message);
+  });
 }
 ```
 
-Complete examples can found in the `examples` directory.
+Basic examples can found in the `examples` directory.
 
 ## Publisher
 

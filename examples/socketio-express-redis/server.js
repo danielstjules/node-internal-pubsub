@@ -1,13 +1,13 @@
 /**
- * This is an example SockJS server based on:
- * https://github.com/sockjs/sockjs-node/tree/master/examples/express-3.x
+ * This is an example Socket.IO 0.9 server, adapted from sockjs-express-redis
  */
 
 var app     = require('express')();
 var http    = require('http');
-var sockjs  = require('sockjs');
 var redis   = require('redis');
 var pubsub  = require('node-internal-pubsub');
+var server  = http.createServer(app);
+var io      = require('socket.io').listen(server);
 
 // Create redis client, subscriber and internal publisher
 var redisClient = redis.createClient();
@@ -25,28 +25,21 @@ app.get('/', function(req, res) {
   res.sendfile(__dirname + '/index.html');
 });
 
-// SockJS server
-var options = {sockjs_url: 'http://cdn.sockjs.org/sockjs-0.3.min.js'};
-var wsServer = sockjs.createServer(options);
-
-wsServer.on('connection', function(conn) {
+// Socket.IO connections
+io.sockets.on('connection', function(socket){
   var sub = pubsub.createSubscriber();
   sub.subscribe('chatmessages');
 
   // Send incoming messages to the user
   sub.on('message', function(channel, message) {
-    conn.write(message);
+    socket.send(message);
   });
 
-  // Publish messages received from the user to redis
-  conn.on('data', function(message) {
+  // Publish messages received from the user
+  socket.on('message', function(message) {
     redisClient.publish('chatmessages', message);
   });
 });
-
-// Create http server for use with express and SockJS
-var server = http.createServer(app);
-wsServer.installHandlers(server, {prefix: '/chat'});
 
 console.log(' [*] Listening on 0.0.0.0:8001' );
 server.listen(8001, '0.0.0.0');
