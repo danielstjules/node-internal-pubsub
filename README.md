@@ -128,7 +128,7 @@ wsServer.on('connection', function(conn) {
 }
 ```
 
-Basic examples can found in the `examples` directory.
+Basic examples can be found in the `examples` directory.
 
 ## Publisher
 
