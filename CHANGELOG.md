@@ -1,3 +1,7 @@
+### 0.0.4 (2014-03-15)
+
+  * Added SockJS and Socket.IO examples
+
 ### 0.0.3 (2014-03-11)
 
   * Set max listeners to unlimited for internal pattern-emitter

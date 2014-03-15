@@ -1,6 +1,6 @@
 {
     "name": "node-internal-pubsub",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "A publish/subscribe API similar to that in node_redis, minus the redis",
     "keywords": ["publish", "subscribe", "pub", "sub", "pubsub", "message",
         "channel"],
