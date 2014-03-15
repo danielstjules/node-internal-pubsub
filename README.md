@@ -121,6 +121,7 @@ redisSub.on('pmessage', function(pattern, channel, msg) {
 wsServer.on('connection', function(conn) {
   var sub = pubsub.createSubscriber();
 
+  // Publish messages received from the user to redis
   conn.on('data', function(message) {
     redisClient.publish('chatmessages', message);
   });

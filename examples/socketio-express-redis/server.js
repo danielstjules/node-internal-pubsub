@@ -35,7 +35,7 @@ io.sockets.on('connection', function(socket){
     socket.send(message);
   });
 
-  // Publish messages received from the user
+  // Publish messages received from the user to redis
   socket.on('message', function(message) {
     redisClient.publish('chatmessages', message);
   });
