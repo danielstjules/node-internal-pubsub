@@ -54,7 +54,7 @@ sockjs.on('connection', function(conn) {
 or
 
 ``` javascript
-io.on('connection', function(socket) {
+io.sockets.on('connection', function(socket){
   var sub = redis.createClient();
   ...
 }

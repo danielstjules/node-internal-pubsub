@@ -26,7 +26,7 @@ app.get('/', function(req, res) {
 });
 
 // Socket.IO connections
-io.sockets.on('connection', function(socket){
+io.sockets.on('connection', function(socket) {
   var sub = pubsub.createSubscriber();
   sub.subscribe('chatmessages');
 
