@@ -99,8 +99,9 @@ Running time: 1203 ms
 Avg messages received per second: 8,312,551
 ```
 
-A ~24x improvement in performance can be seen in the above output by using the
-2,000 internal subscribers as opposed to the same number of redis clients.
+This was ran with a local redis server on my Macbook Air. A ~24x improvement in
+performance can be seen in the above output by using the 2,000 internal
+subscribers as opposed to the same number of redis clients.
 
 ## Examples
 
