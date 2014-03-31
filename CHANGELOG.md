@@ -1,3 +1,7 @@
+### 1.0.0 (2014-03-30)
+
+  * Fixed Socket.IO example
+
 ### 0.0.4 (2014-03-15)
 
   * Added SockJS and Socket.IO examples

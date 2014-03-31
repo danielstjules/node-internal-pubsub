@@ -35,7 +35,7 @@ your `package.json` file:
 
 ```
 "dependencies": {
-    "node-internal-pubsub": ">0.0.3"
+    "node-internal-pubsub": "1.0.x"
 }
 ```
 

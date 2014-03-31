@@ -1,6 +1,6 @@
 {
     "name": "node-internal-pubsub",
-    "version": "0.0.4",
+    "version": "1.0.0",
     "description": "A publish/subscribe API similar to that in node_redis, minus the redis",
     "keywords": ["publish", "subscribe", "pub", "sub", "pubsub", "message",
         "channel"],
@@ -13,7 +13,7 @@
         "url": "https://github.com/danielstjules/node-internal-pubsub.git"
     },
     "dependencies": {
-        "pattern-emitter": "1.x.x"
+        "pattern-emitter": "1.0.x"
     },
     "devDependencies": {
         "mocha": "*",
