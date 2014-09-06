@@ -212,6 +212,12 @@ describe('Subscriber', function() {
       expect(channels).to.have.length(3);
       expect(counts).to.eql([2, 1, 0]);
     });
+
+    it('returns if no channels were specified and subscribed', function() {
+      var sub = new Subscriber(emitter);
+      sub.psubscribe('test');
+      sub.unsubscribe();
+    });
   });
 
   describe('psubscribe', function() {
@@ -366,6 +372,12 @@ describe('Subscriber', function() {
 
       expect(patterns).to.have.length(3);
       expect(counts).to.eql([2, 1, 0]);
+    });
+
+    it('returns if no channels were specified and psubscribed', function() {
+      var sub = new Subscriber(emitter);
+      sub.subscribe('test');
+      sub.punsubscribe();
     });
   });
 });
