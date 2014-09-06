@@ -1,27 +1,36 @@
 {
-    "name": "node-internal-pubsub",
-    "version": "1.0.0",
-    "description": "A publish/subscribe API similar to that in node_redis, minus the redis",
-    "keywords": ["publish", "subscribe", "pub", "sub", "pubsub", "message",
-        "channel"],
-    "author": "Daniel St. Jules <danielst.jules@gmail.com>",
-    "licenses": ["MIT"],
-    "main": "index.js",
-    "homepage": "https://github.com/danielstjules/node-internal-pubsub",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/danielstjules/node-internal-pubsub.git"
-    },
-    "dependencies": {
-        "pattern-emitter": "1.0.x"
-    },
-    "devDependencies": {
-        "mocha": "*",
-        "expect.js": "*",
-        "async": "*",
-        "redis": "*"
-    },
-    "scripts": {
-        "test": "./node_modules/.bin/mocha -R spec spec"
-    }
+  "name": "node-internal-pubsub",
+  "version": "1.0.1",
+  "description": "A publish/subscribe API similar to that in node_redis, minus the redis",
+  "keywords": [
+    "publish",
+    "subscribe",
+    "pub",
+    "sub",
+    "pubsub",
+    "message",
+    "channel"
+  ],
+  "author": "Daniel St. Jules <danielst.jules@gmail.com>",
+  "licenses": [
+    "MIT"
+  ],
+  "main": "index.js",
+  "homepage": "https://github.com/danielstjules/node-internal-pubsub",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/danielstjules/node-internal-pubsub.git"
+  },
+  "dependencies": {
+    "pattern-emitter": "1.0.x"
+  },
+  "devDependencies": {
+    "mocha": "*",
+    "expect.js": "*",
+    "async": "*",
+    "redis": "*"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/mocha -R spec spec"
+  }
 }
