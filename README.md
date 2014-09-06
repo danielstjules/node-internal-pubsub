@@ -126,7 +126,7 @@ wsServer.on('connection', function(conn) {
   conn.on('data', function(message) {
     redisClient.publish('chatmessages', message);
   });
-}
+});
 ```
 
 Basic examples can be found in the `examples` directory.
